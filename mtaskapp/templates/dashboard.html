@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Mtask | Dashboard {%  endblock %}
+
+{% block contentarea %}
+
+<!--Sripts -->
+
+<style type="text/css">
+  .col-md-3,
+  .col-md-9 {
+    border-style: double;
+    border-width: 2px;
+    border-color: #000;
+  }
+
+  .margin-left {
+    margin-left: 20px;
+  }
+
+  .board {
+    margin: 15px;
+    height: 100%;
+    border-color: #000;
+  }
+</style>
+
+
+<div class="container" id="maincontainer" style="margin-top: 120px;">
+  <div class="row" id="universalrow">
+
+    <div class="col-sm-9" id="allboards">
+
+      <h3>Personal board</h3>
+      <div class="container">
+        <div class="row margin-left" id="personalboards">
+
+          <a href='#' class="card border-primary board" id='board-modal' style="width: 230px;display: none;">
+            <div class="card-body text-primary">
+              <h4 class="card-title">
+                <span class="card_modal_title">Create a board</span>
+              </h4>
+            </div>
+          </a>
+
+          {% for board in boards %}
+         
+          <a href="boards/{{board.slug}}" class="card border-primary board" id='{{ board.slug }}' data-id={{board.id}}
+            data-title="{{board.title}}" style="width: 230px;">
+            <div class="card-body text-primary">
+              <h4 class="card-title">
+                <span class="card_modal_title">{{ board.title }}</span>
+              </h4>
+            </div>
+          </a>
+          {% endfor %}
+
+          <a herf="#" class="card border-primary board" id="create_board" data-toggle="modal" data-target="#mymodal"
+            style="max-width: 20rem;">
+            <div class="card-body text-primary">
+              <h4 class="card-title">
+                <span class="card_modal_title">Create new one</span></h4>
+            </div>
+          </a>  
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="mymodal" class="mymodal" tabindex="-1" role="dialog" aria-labelledby="createBoradModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-top" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Title</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="hidden" name="board_id" id="board_id" value="">
+      </div>
+      <div class="modal-body" style="height: 100px;">
+        <form role="form" id="newModalForm" name="newModalForm">
+          <input type="text" class="form-control" name="modal_title" id="modal_title" placeholder="Title"><br><br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="add-board" class="btn btn-primary" data-dismiss="modal">Add</button>
+        
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).on('hidden.bs.modal', '#mymodal', function () {
+    $(this).find('#modal_title').val("");
+  })
+
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  $(document).ready(function () {
+
+    $('#add-board').on('click', function () {
+
+      let mymodal = $('#mymodal')
+
+      let board_title = $(mymodal).find('#modal_title').val()
+
+      if (board_title == "" || board_title == " ") {
+        alert("Please enter title.")
+        return false;
+      }
+      else {
+
+        let modal_board = $('#board-modal').clone()
+        // modal_board.find('.card_modal_title').text(board_title)
+        // modal_board.attr('data-title', board_title)
+        // modal_board.attr('href', '/board/' + board_title.replace(/ /g, '-'))
+        // modal_board.attr('id', board_title.replace(/ /g, '-'))
+        // modal_board.css('display', 'block')
+
+        $.ajax({
+
+          headers: { "X-CSRFToken": getCookie('csrftoken') },
+          type: 'POST',
+          url: "{% url 'create_board' %}",
+          data: {
+            'title': board_title,
+          },
+          dataType: 'json',
+          success: function (data) {
+            let modal_board = $('#board-modal').clone()
+            modal_board.find('.card_modal_title').text(board_title)
+            modal_board.attr('data-title', data.board.title)
+            modal_board.attr('href', 'boards/' + data.board.slug)
+            modal_board.attr('data-id',data.board.id)
+            modal_board.attr('id', data.board.slug)
+            modal_board.css('display', 'block')
+            $('#personalboards').prepend(modal_board)
+            $('#modal_title').val("")
+          }
+        });
+        // $('.board_modal_title').on('click', function () {
+        //   let mymodal = $('#mymodal')
+        //   $(mymodal).find('#modal_title').val($(this).closest('a').attr('data-title'))
+        //   $(mymodal).find('#board_id').val($(this).closest('a').attr('id'))
+        // })
+
+      }
+    })
+
+    
+  })
+</script>
+{% endblock %}

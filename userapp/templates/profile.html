@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Mtask | Profile {%  endblock %}
+
+{% block contentarea %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/profile_page.css' %}">
+
+<div class="container" style="margin-top: 200px;">
+  <div class="row">
+    
+      <div class="avatar" >
+        <!-- User Profile Image -->
+      {% if profile.image %}
+      <img src="{{profile.image.url}}" style="height: 150px; width: 150px;    object-fit: cover;" >
+      {% else %}
+      <img src="{% static 'img/background.jpg' %}" style="height: 150px; width: 150px;">
+      {% endif %}
+        <!-- <img class="profile-pic" src="{% if profile.image %} profile.image.url {% endif %}"> -->
+
+        <!-- Default Image -->
+        <!-- <i class="fa fa-user fa-5x"></i> -->
+      </div>
+    
+  </div>
+  
+  <h2>{{user.get_full_name}}</h2>
+  <h4>{{user.email}}</h4>
+
+  <a href="{% url 'editprofile' %}"><button type="submit" id ="editprofile" class="editprofile">Edit Profile</button><br><br></a>
+  <a href="{% url 'changepassword' %}">Change password</a>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}

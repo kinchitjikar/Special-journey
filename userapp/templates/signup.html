@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Mtask | Signup {%  endblock %}
+
+{% block contentarea %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}">
+      <div id="register">
+  
+        <form name="regform" class="modal-div animate" style="height: 750px; margin-top: 100px;" method="post" action="{% url 'signup' %}">
+          {% csrf_token %}
+          <div class="container">
+            <h1>Sign Up</h1>
+            {{message}}
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Username" id="username" name="username" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$" title="username should be starting with letter" required>
+  
+            <label for="firstname"><b>Firstname</b></label>
+            <input type="text" placeholder="Firstname" name="firstname" pattern="[A-Za-z]{1,32}" title="firstname must contain alphabet" required>
+  
+            <label for="lastname"><b>Lastname</b></label>
+            <input type="text" placeholder="Lastname" name="lastname" pattern="[A-Za-z]{1,32}" title="lastname must contain alphabet" required>
+  
+            <label for="email"><b>Email</b></label>
+            <input type="email" placeholder="Email" name="email" id="email" required
+              pattern="[a-zA-Z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$">
+  
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Password" name="password" id="password" pattern=".{8,}"
+              title="Eight or more characters" required>
+  
+            <label for="confirmpassword"><b>Confirm Password</b></label>
+            <input type="password" placeholder="Confirm Password" name="confirmpassword" pattern=".{8,}"
+              title="Eight or more characters" id="confirmpassword" oninput="confirmpass(this)" required>
+            
+            <script language='javascript' type='text/javascript'>
+              function confirmpass(input) {
+                if (input.value != document.getElementById('password').value) {
+                  input.setCustomValidity('Password Must be Matching.');
+                } else {
+                  // input is valid -- reset the error message
+                  input.setCustomValidity('');
+                }
+              }
+            </script>
+  
+            <button type="submit" class="signupbtn">Sign Up</button>
+          </div>
+        </form>
+      </div>
+
+
+
+{% endblock %}

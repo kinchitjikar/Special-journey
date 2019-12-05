@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Mtask | Login {%  endblock %}
+
+{% block contentarea %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/user_login_style.css' %}">
+  <div id="login">
+    <form class="modal-content animate" style="height:500px; margin-top: 150px;" method="post">
+      {% csrf_token %}
+      <div class="container" style="height: 150px;">
+        {{msg}}{{MSG}}
+        <h1>Login</h1>
+
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
+
+        <button type="submit" class="loginbtn">Login</button>
+        <label>
+          <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label><br><br>
+
+        <button type="button" class="signupbtn"><a href="{% url 'signup' %}" style="color: aliceblue;" ><span>New User?</span>Sign up</a></button>
+        <span class="psw"><a href="{% url 'password_reset' %}">Forgot password?</a></span>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}

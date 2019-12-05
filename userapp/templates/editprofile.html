@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Mtask | Edit Profile {%  endblock %}
+
+{% block contentarea %}
+<form name="efitprofileform" class="modal-div animate" enctype="multipart/form-data" style="height: 750px; margin-top: 100px;" method="post" action="{% url 'updateprofile' %}">
+    {% csrf_token %}
+    <div class="container">
+      <h1>Edit profile</h1>
+       
+
+      <label for="firstname"><b>Firstname</b></label>
+      <input type="text" placeholder="firstname" id="firstname" value="{{user.first_name}}" name="firstname"><br><br>
+
+      <label for="lastname"><b>Lastname</b></label>
+      <input type="text" placeholder="lastname" value="{{user.last_name}}" name="lastname"><br><br>
+      <h2>Profile Pic</h2>
+      <input type="file" name="profilepic">
+      <button type="submit" id ="updateprofile"  class="updateprofile">Upadte Profile</button><br><br>
+    </div>
+</form>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
